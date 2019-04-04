@@ -92,7 +92,7 @@ def build_loss(logits,ground_truth,lstm_size,classes_num):
 
 def build_optimizer(loss,learning_rate,grad_clip):
 
-    tvars = tf.trainable_variables();
+    tvars = tf.trainable_variables()
 
     grads, _ = tf.clip_by_global_norm(tf.gradients(loss,tvars), grad_clip)
 
@@ -104,7 +104,7 @@ def build_optimizer(loss,learning_rate,grad_clip):
 
 def pick_top_n(pred,char_num,n):
 
-    n = 5;
+    n = 5
 
     p = np.squeeze(pred)
 
@@ -194,27 +194,27 @@ class charRNN:
 
 
 
-with open('sample2.txt', 'rb') as f:
+with open('D.txt', 'rb') as f:
     # use 'rb' instead of 'r' to read chinese charactor
     text = f.read()
 
 lines_of_text = text.split('\n')
-print lines_of_text[0].decode("utf-8")
+print(lines_of_text[0].decode("utf-8"))
 
-print 'Number of characters in document {0}'.format(len(text))  # TODO: cannot read file when text was chinese charactor
+print ('Number of characters in document {0}'.format(len(text)))  # TODO: cannot read file when text was chinese charactor
 vocab = set(text)
 
 char_num = len(vocab)
 
-print char_num
+print (char_num)
 
 vocab_to_int = {c: i for i, c in enumerate(vocab)}  # c:i pair
 
-print vocab_to_int
+print (vocab_to_int)
 
 int_to_vocab = dict(enumerate(vocab))
 
-print int_to_vocab
+print (int_to_vocab)
 
 encoded = np.array([vocab_to_int[c] for c in text],dtype=np.int32)  # translate char value to int key
 
@@ -227,18 +227,18 @@ encoded[:100]
 print("opened")
 
 # train
-train_model = False
+train_model = True
 
 epochs = 20
 
 save_every_n = 100
 
-batch_size = 100        # Sequences per batch
-sequence_length = 100          # Number of sequence steps per batch
+batch_size = 200        # Sequences per batch
+sequence_length = 30          # Number of sequence steps per batch
 lstm_size = 512         # Size of hidden layers in LSTMs
 layer_num = 2          # Number of LSTM layers
 learning_rate = 0.001    # Learning rate
-keep_prob = 0.5 # Dropout keep probability
+keep_prob = 0.8 # Dropout keep probability
 
 model = charRNN(classes_num = char_num,
                 batch_size = batch_size,
@@ -291,9 +291,9 @@ if train_model:
                           '{:.4f}sec/batch'.format((end - start)))
 
                 if (counter % save_every_n == 0):
-                    saver.save(sess, "checkpoints/i{}_l{}.ckpt".format(counter, lstm_size))
+                    saver.save(sess, "/home/zhizhao/temp/checkpoints/i{}_l{}.ckpt".format(counter, lstm_size))
 
-        saver.save(sess, "checkpoints_all_done.ckpt")
+        saver.save(sess, "/home/zhizhao/temp/checkpoints/checkpoints_all_done.ckpt")
 
         print("trained")
 
@@ -308,4 +308,4 @@ print("loaded")
 
 samp = sample(checkpoint,5000,lstm_size,char_num,prime=" ")
 
-print samp
+print (samp)
